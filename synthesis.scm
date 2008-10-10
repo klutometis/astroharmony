@@ -1,7 +1,7 @@
 (define pi (* (atan 1) 4))
 
 (define (dB n)
-  (expt 10 (/ n 10)))
+  (expt 10 (exact->inexact (/ n 10))))
 
 (define (pure-tone rate pitch size volume)
   (let ((scale (/ (* 2 pi) rate))
@@ -108,3 +108,17 @@
           sound
           (- total-duration fade-duration)
           total-duration)))
+
+(define (keplerian-panner-fader sound target source days duration)
+  (let ((t0 (current-julian-day))
+        (delta-t (/ days duration)))
+    (lambda (t)
+      (let-values (((x-ecliptic y-ecliptic z-ecliptic
+                                delta right-ascension declination)
+                    (allocentric-kepler target
+                                        source
+                                        (+ t0 (* t delta-t)))))
+        (pan (amplifier sound (/ 1 delta))
+             silence
+             (dB -3)
+             (/ (+ 1 (sin (degrees->radians right-ascension))) 2))))))

@@ -1,6 +1,6 @@
 (require-extension
  syntax-case
- (srfi 1 9 11 31))
+ (srfi 1 9 11 19 31))
 (module
  sound
  (pi
@@ -44,6 +44,7 @@
   aes
   newton
   logarithmic-fader
+  keplerian-panner-fader
   allocentric-kepler
   kepler
   earth-moon-barycenter

@@ -15,7 +15,7 @@
                  (date->string (julian-day->date (+ (current-julian-day) k)))))
             (debug
              date
-             (/ right-ascension 15)
+             (degrees->minutes right-ascension)
              declination
              delta
              )))))

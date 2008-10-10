@@ -3,3 +3,5 @@
 * Benchmark ecliptics agains ecliptics-alt (with true-anomaly).
 
 * Standardize on radians.
+
+* Compile and benchmark.

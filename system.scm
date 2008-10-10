@@ -7,7 +7,7 @@
 (let ((out (port->endian-port (open-output-file "test.raw")))
       (hertz 22050)
       (size 8)
-      (seconds 0.5)
+      (seconds 60)
       (days 365)
       (volume 0.5))
   (let ((duration (* hertz seconds)))

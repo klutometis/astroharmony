@@ -56,9 +56,11 @@
   pluto
   sol
   degrees->radians
+  degrees->minutes
   radians->degrees)
  (include "util.scm")
  (include "notes.scm")
  (include "synthesis.scm")
  (include "newton.scm")
- (include "kepler.scm"))
+ (include "kepler.scm")
+ (include "planets.scm"))

@@ -1,24 +1,3 @@
-(define-record-type :element
-  (make-element j2000 rate)
-  element?
-  (j2000 element-j2000)
-  (rate element-rate))
-
-(define-record-type :planet
-  (make-planet semi-major-axis
-               eccentricity
-               inclination
-               mean-longitude
-               longitude-perihelion
-               longitude-ascending-node)
-  planet?
-  (semi-major-axis planet-semi-major-axis)
-  (eccentricity planet-eccentricity)
-  (inclination planet-inclination)
-  (mean-longitude planet-mean-longitude)
-  (longitude-perihelion planet-longitude-perihelion)
-  (longitude-ascending-node planet-longitude-ascending-node))
-
 (define (radians->degrees . radians)
   (apply values (map (cut * <> (/ 180.0 pi)) radians)))
 

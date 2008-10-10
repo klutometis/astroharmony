@@ -1,0 +1,13 @@
+(require-extension
+ syntax-case)
+(require 'sound)
+(import sound)
+(exact->inexact (* (orbit->hertz (planet-orbit pluto)) (expt 2 35)))
+(exact->inexact (* (orbit->hertz (planet-orbit neptune)) (expt 2 35)))
+(exact->inexact (* (orbit->hertz (planet-orbit uranus)) (expt 2 35)))
+(exact->inexact (* (orbit->hertz (planet-orbit saturn)) (expt 2 34)))
+(exact->inexact (* (orbit->hertz (planet-orbit jupiter)) (expt 2 33)))
+(exact->inexact (* (orbit->hertz (planet-orbit mars)) (expt 2 31)))
+(exact->inexact (* (orbit->hertz (planet-orbit earth-moon-barycenter)) (expt 2 31)))
+(exact->inexact (* (orbit->hertz (planet-orbit venus)) (expt 2 31)))
+(exact->inexact (* (orbit->hertz (planet-orbit mercury)) (expt 2 30)))

@@ -52,16 +52,18 @@
   venus
   mars
   jupiter
+  saturn
   uranus
   neptune
   pluto
   sol
   degrees->radians
   degrees->minutes
-  radians->degrees)
+  radians->degrees
+  planet-tone)
  (include "util.scm")
  (include "notes.scm")
  (include "synthesis.scm")
  (include "newton.scm")
- (include "kepler.scm")
- (include "planets.scm"))
+ (include "planets.scm")
+ (include "kepler.scm"))

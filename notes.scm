@@ -1,0 +1,30 @@
+(define (step i)
+  (expt (expt 2 (exact->inexact (/ 1 12))) i))
+
+;;; Slightly different from piano octaves: octaves are a-based,
+;;; starting from a0 (27.5), a1 (55.0), etc.; except that c0 (32.7) is
+;;; the c above a0, etc.
+(define (octave i step)
+  (* step 27.5 (expt 2 i)))
+
+(define a (step 0))
+(define ais (step 1))
+(define bes ais)
+(define b (step 2))
+(define ces b)
+(define c (step 3))
+(define bis c)
+(define cis (step 4))
+(define des cis)
+(define d (step 5))
+(define dis (step 6))
+(define es dis)
+(define e (step 7))
+(define fes e)
+(define f (step 8))
+(define eis f)
+(define fis (step 9))
+(define ges fis)
+(define g (step 10))
+(define gis (step 11))
+(define aes gis)

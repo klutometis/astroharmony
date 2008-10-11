@@ -60,7 +60,9 @@
   degrees->radians
   degrees->minutes
   radians->degrees
-  planet-tone)
+  planet-tone
+  planet-orbit
+  orbit->hertz)
  (include "util.scm")
  (include "notes.scm")
  (include "synthesis.scm")

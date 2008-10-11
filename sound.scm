@@ -1,5 +1,6 @@
 (require-extension
  syntax-case
+ numbers
  (srfi 1 9 11 19 31))
 (module
  sound

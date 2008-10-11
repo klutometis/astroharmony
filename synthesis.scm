@@ -121,4 +121,4 @@
         (pan (amplifier sound (/ 1 delta))
              silence
              (dB -3)
-             (/ (+ 1 (sin (degrees->radians right-ascension))) 2))))))
+             (/ (+ 1 (sin right-ascension)) 2))))))

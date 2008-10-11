@@ -51,7 +51,7 @@
                (make-element 77.45779628 0.16047689)
                (make-element 48.33076593 -0.12534081)
                87.9691
-               30))
+               28))
 
 (define venus
   (make-planet (make-element 0.72333566 0.00000390)
@@ -61,7 +61,7 @@
                (make-element 131.60246718 0.00268329)
                (make-element 76.67984255 -0.27769418)
                224.70069
-               31))
+               29))
 
 (define earth-moon-barycenter
   (make-planet (make-element 1.00000261 0.00000562)
@@ -71,7 +71,7 @@
                (make-element 102.93768193 0.32327364)
                (make-element 0.0 0.0)
                365.256366
-               31))
+               30))
 
 (define mars
   (make-planet (make-element 1.52371034 0.00001847)
@@ -121,7 +121,7 @@
                (make-element 44.96476227 -0.32241464)
                (make-element 131.78422574 -0.00508664)
                60190
-               35))
+               36))
 
 (define pluto
   (make-planet (make-element 39.48211675 -0.00031596)
@@ -131,4 +131,4 @@
                (make-element 224.06891629 -0.04062942)
                (make-element 110.30393684 -0.01183482)
                90613.3055
-               35))
+               37))

@@ -5,9 +5,9 @@
 (require 'sound)
 (import sound)
 (let ((out (port->endian-port (open-output-file "test.raw")))
-      (hertz 22050)
+      (hertz 11025)
       (size 8)
-      (seconds 60)
+      (seconds 0.5)
       (days 365)
       (volume 0.5))
   (let ((duration (* hertz seconds)))
@@ -45,6 +45,8 @@
                            ((uranus-l uranus-r) (uranus t))
                            ((neptune-l neptune-r) (neptune t))
                            ((pluto-l pluto-r) (pluto t)))
+;;;                 (if (zero? (modulo t 100))
+;;;                     (debug (- duration t)))
                 (endian-port-write-int1 out (+ ((mixer
                                                  mercury-l
                                                  venus-l

@@ -105,10 +105,10 @@
 (define (right-ascension x-equatorial
                          y-equatorial
                          z-equatorial)
-  (+ (radians->degrees (atan (/ y-equatorial x-equatorial)))
-     (cond ((negative? x-equatorial) 180)
+  (+ (atan (/ y-equatorial x-equatorial))
+     (cond ((negative? x-equatorial) pi)
            ((and (positive? x-equatorial)
-                 (negative? y-equatorial)) 360)
+                 (negative? y-equatorial)) (* 2 pi))
            (else 0))))
 
 (define (declination x-equatorial

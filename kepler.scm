@@ -114,10 +114,9 @@
 (define (declination x-equatorial
                      y-equatorial
                      z-equatorial)
-  (radians->degrees
-   (atan (/ z-equatorial
-            (sqrt (+ (expt x-equatorial 2)
-                     (expt y-equatorial 2)))))))
+  (atan (/ z-equatorial
+           (sqrt (+ (expt x-equatorial 2)
+                    (expt y-equatorial 2))))))
 
 (define (mean-anomaly mean-longitude longitude-perihelion)
   (let ((mean-anomaly (- mean-longitude longitude-perihelion)))

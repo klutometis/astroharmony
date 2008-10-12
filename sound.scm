@@ -59,8 +59,12 @@
   pluto
   sol
   degrees->radians
-  degrees->minutes
+  degrees->hours
   radians->degrees
+  radians->hours
+  hms->hours
+  hours->radians
+  hms->radians
   planet-tone
   planet-orbit
   orbit->hertz)

@@ -24,7 +24,7 @@ clean:
 	rm -fv $(RAW) $(WAV) $(OBJ) $(BIN)
 
 $(OBJ): $(LIB)
-	csc -s -profile $<
+	csc -s $<
 
 $(BIN): $(SRC) $(OBJ)
-	csc -profile $<
+	csc $<

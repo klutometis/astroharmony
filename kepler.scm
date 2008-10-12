@@ -8,60 +8,37 @@
 (define (degrees->radians . degrees)
   (apply values (map (cut * <> (/ pi 180.0)) degrees)))
 
-(define (degrees->minutes . degrees)
+(define (degrees->hours . degrees)
   (apply values (map (cut / <> 15) degrees)))
 
-(define (ecliptics argument-perihelion
+(define (hours->degrees . hours)
+  (apply values (map (cut * <> 15) hours)))
+
+(define (radians->hours . radians)
+  (apply values
+         (map (lambda (radians)
+                (degrees->hours (radians->degrees radians)))
+              radians)))
+
+(define (hms->hours hours minutes seconds)
+  (+ hours (/ minutes 60) (/ seconds 60)))
+
+(define (hours->radians . hours)
+  (apply values
+         (map (lambda (hours) (degrees->radians (hours->degrees hours)))
+              hours)))
+
+(define (hms->radians hours minutes seconds)
+  (hours->radians (hms->hours hours minutes seconds)))
+
+(define (ecliptics true-anomaly
+                   heliocentric-radius
                    longitude-ascending-node
+                   longitude-perihelion
                    inclination
-                   x-heliocentric
-                   y-heliocentric
-                   z-heliocentric
                    source-x-ecliptic
                    source-y-ecliptic
                    source-z-ecliptic)
-  (let ((x (+ (* (- (* (cos argument-perihelion)
-                       (cos longitude-ascending-node))
-                    (* (sin argument-perihelion)
-                       (sin longitude-ascending-node)
-                       (cos inclination)))
-                 x-heliocentric)
-              (* (- (- (* (sin argument-perihelion)
-                          (cos longitude-ascending-node)))
-                    (* (cos argument-perihelion)
-                       (sin longitude-ascending-node)
-                       (cos inclination)))
-                 y-heliocentric)))
-        (y (+ (* (+ (* (cos argument-perihelion)
-                       (sin longitude-ascending-node))
-                    (* (sin argument-perihelion)
-                       (cos longitude-ascending-node)
-                       (cos inclination)))
-                 x-heliocentric)
-              (* (+ (- (* (sin argument-perihelion)
-                          (sin longitude-ascending-node)))
-                    (* (cos argument-perihelion)
-                       (cos longitude-ascending-node)
-                       (cos inclination)))
-                 y-heliocentric)))
-        (z (+ (* (sin argument-perihelion)
-                 (sin inclination)
-                 x-heliocentric)
-              (* (cos argument-perihelion)
-                 (sin inclination)
-                 y-heliocentric))))
-    (values (- x source-x-ecliptic)
-            (- y source-y-ecliptic)
-            (- z source-z-ecliptic))))
-
-(define (alternate-ecliptics true-anomaly
-                             heliocentric-radius
-                             longitude-ascending-node
-                             longitude-perihelion
-                             inclination
-                             source-x-ecliptic
-                             source-y-ecliptic
-                             source-z-ecliptic)
   (let ((internal-term (+ true-anomaly
                           longitude-perihelion
                           (- longitude-ascending-node))))
@@ -140,15 +117,6 @@
           eccentric-anomaly
           (iter (+ eccentric-anomaly delta-eccentric-anomaly))))))
 
-(define (heliocentrics semi-major-axis eccentric-anomaly eccentricity)
-  (let ((x (* semi-major-axis (- (cos eccentric-anomaly)
-                                 eccentricity)))
-        (y (* semi-major-axis
-              (sqrt (- 1 (expt eccentricity 2)))
-              (sin eccentric-anomaly)))
-        (z 0))
-    (values x y z)))
-
 (define (right-ascension x-equatorial
                          y-equatorial
                          z-equatorial)
@@ -211,14 +179,14 @@
                (heliocentric-radius
                 (heliocentric-radius semi-major-axis eccentricity true-anomaly)))
           (let*-values (((x-ecliptic y-ecliptic z-ecliptic)
-                         (alternate-ecliptics true-anomaly
-                                              heliocentric-radius
-                                              longitude-ascending-node
-                                              longitude-perihelion
-                                              inclination
-                                              source-x-ecliptic
-                                              source-y-ecliptic
-                                              source-z-ecliptic))
+                         (ecliptics true-anomaly
+                                    heliocentric-radius
+                                    longitude-ascending-node
+                                    longitude-perihelion
+                                    inclination
+                                    source-x-ecliptic
+                                    source-y-ecliptic
+                                    source-z-ecliptic))
                         ((x-equatorial y-equatorial z-equatorial)
                          (equatorials x-ecliptic
                                       y-ecliptic

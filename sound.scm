@@ -65,6 +65,7 @@
   hms->hours
   hours->radians
   hms->radians
+  dms->radians
   planet-tone
   planet-orbit
   orbit->hertz)

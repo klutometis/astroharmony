@@ -23,6 +23,14 @@
 (define (hms->hours hours minutes seconds)
   (+ hours (/ minutes 60) (/ seconds 60)))
 
+(define (dms->degrees degrees minutes seconds)
+  (if (positive? degrees)
+      (+ degrees (/ minutes 60) (/ seconds 60))
+      (- degrees (/ minutes 60) (/ seconds 60))))
+
+(define (dms->radians degrees minutes seconds)
+  (degrees->radians (dms->degrees degrees minutes seconds)))
+
 (define (hours->radians . hours)
   (apply values
          (map (lambda (hours) (degrees->radians (hours->degrees hours)))

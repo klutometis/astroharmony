@@ -90,15 +90,15 @@
                (- 1 (* eccentricity
                        (cos eccentric-anomaly))))))
       (if (< (abs delta-eccentric-anomaly) tolerance)
-          (radians->degrees eccentric-anomaly)
+          eccentric-anomaly
           (iter (+ eccentric-anomaly delta-eccentric-anomaly))))))
 
 (define (heliocentrics semi-major-axis eccentric-anomaly eccentricity)
-  (let ((x (* semi-major-axis (- (cos (degrees->radians eccentric-anomaly))
+  (let ((x (* semi-major-axis (- (cos eccentric-anomaly)
                                  eccentricity)))
         (y (* semi-major-axis
               (sqrt (- 1 (expt eccentricity 2)))
-              (sin (degrees->radians eccentric-anomaly))))
+              (sin eccentric-anomaly)))
         (z 0))
     (values x y z)))
 

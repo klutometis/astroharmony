@@ -1,4 +1,4 @@
-(define obliquity 23.43928)
+(define obliquity 0.409092610296857)
 
 (define tolerance 10e-6)
 
@@ -58,17 +58,16 @@
                      y-ecliptic
                      z-ecliptic
                      obliquity)
-  (let ((obliquity (degrees->radians obliquity)))
-    (let ((x-equatorial x-ecliptic)
-          (y-equatorial (+ (* (cos obliquity)
-                              y-ecliptic)
-                           (- (* (sin obliquity)
-                                 z-ecliptic))))
-          (z-equatorial (+ (* (sin obliquity)
-                              y-ecliptic)
-                           (* (cos obliquity)
-                              z-ecliptic))))
-      (values x-equatorial y-equatorial z-equatorial))))
+  (let ((x-equatorial x-ecliptic)
+        (y-equatorial (+ (* (cos obliquity)
+                            y-ecliptic)
+                         (- (* (sin obliquity)
+                               z-ecliptic))))
+        (z-equatorial (+ (* (sin obliquity)
+                            y-ecliptic)
+                         (* (cos obliquity)
+                            z-ecliptic))))
+    (values x-equatorial y-equatorial z-equatorial)))
 
 (define (compute-element element T)
   (+ (element-j2000 element) (* (element-rate element) T)))

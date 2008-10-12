@@ -7,3 +7,15 @@
 * Compile and benchmark.
 
 * Necessary modulos?
+
+* Develop a moving planet with an interval, which projects the
+  target's position at the interval-end; and, keeping phi and theta
+  the same, increases r by (/ r interval) ticks until it meets the
+  target at the interval-end.
+
+  That way, we can transition smoothly between planets; let
+  keplerian-panner-fader take a function of t as the source: thus we
+  can vary the ecliptical trajectory (or not).
+
+  Would like to have a seamless trajectory across planets; temporally
+  and spatially.

@@ -3,6 +3,8 @@
 (define (dB n)
   (expt 10 (exact->inexact (/ n 10))))
 
+(define dB-3 0.501187233627272)
+
 (define (pure-tone rate pitch size volume)
   (let ((scale (/ (* 2 pi) rate))
         (amplitude (* volume (expt 2 (- size 1)))))
@@ -120,5 +122,5 @@
                                         (+ t0 (* t delta-t)))))
         (pan (amplifier sound (/ 1 delta))
              silence
-             (dB -3)
+             dB-3
              (/ (+ 1 (sin right-ascension)) 2))))))

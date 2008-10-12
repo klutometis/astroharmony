@@ -32,7 +32,7 @@
      (expt 2 (planet-octave planet))))
 
 ;;; Simplified models for 1800 AD -- 2050 AD; also includes a star and
-;;; dwarf planet.
+;;; dwarf planet; translated from degrees->radians.
 (define sol
   (make-planet (make-element 1e-12 0.0)
                (make-element 0.0 0.0)
@@ -46,20 +46,20 @@
 (define mercury
   (make-planet (make-element 0.38709927 0.00000037)
                (make-element 0.20563593 0.00001906)
-               (make-element 7.00497902 -0.00594749)
-               (make-element 252.25032350 149472.67411175)
-               (make-element 77.45779628 0.16047689)
-               (make-element 48.33076593 -0.12534081)
+               (make-element 0.122259947932126 -0.000103803282729438)
+               (make-element 4.40259868429583 2608.79030501053)
+               (make-element 1.35189357642502 0.00280085010386076)
+               (make-element 0.843530995489199 -0.00218760982161663)
                87.9691
                28))
 
 (define venus
   (make-planet (make-element 0.72333566 0.00000390)
                (make-element 0.00677672 -0.00004107)
-               (make-element 3.39467605 -0.00078890)
-               (make-element 181.97909950 58517.81538729)
-               (make-element 131.60246718 0.00268329)
-               (make-element 76.67984255 -0.27769418)
+               (make-element 0.0592482741110957 -1.37689024689833e-05)
+               (make-element 3.17613445608937 1021.32854958241)
+               (make-element 2.29689635603878 4.68322452858386e-05)
+               (make-element 1.33831572240834 -0.00484667775462579)
                224.70069
                29))
 
@@ -86,49 +86,49 @@
 (define jupiter
   (make-planet (make-element 5.20288700 -0.00011607)
                (make-element 0.04838624 -0.00013253)
-               (make-element 1.30439695 -0.00183714)
-               (make-element 34.39644051 3034.74612775)
-               (make-element 14.72847983 0.21252668)
-               (make-element 100.47390909 0.20469106)
+               (make-element 0.0227660215304719 -3.20641418200886e-05)
+               (make-element 0.600331137865858 52.966311891386)
+               (make-element 0.257060466847075 0.00370929031433238)
+               (make-element 1.75360052596996 0.00357253294639726)
                4331.572
                33))
 
 (define saturn
   (make-planet (make-element 9.53667594 -0.00125060)
                (make-element 0.05386179 -0.00050991)
-               (make-element 2.48599187 0.00193609)
-               (make-element 49.95424423 1222.49362201)
-               (make-element 92.59887831 -0.41897216)
-               (make-element 113.66242448 -0.28867794)
+               (make-element 0.0433887433093108 3.3791145114937e-05)
+               (make-element 0.87186603715888 21.3365387887055)
+               (make-element 1.61615531016306 -0.00731244366619248)
+               (make-element 1.9837835429754 -0.00503838053087464)
                10832.327
                34))
 
 (define uranus
   (make-planet (make-element 19.18916464 -0.00196176)
                (make-element 0.04725744 -0.00004397)
-               (make-element 0.77263783 -0.00242939)
-               (make-element 313.23810451 428.48202785)
-               (make-element 170.95427630 0.40805281)
-               (make-element 74.01692503 0.04240589)
+               (make-element 0.0134850740589642 -4.2400854315025e-05)
+               (make-element 5.4670362664056 7.47842217160454)
+               (make-element 2.98371499179911 0.00712186505651484)
+               (make-element 1.2918390439753 0.000740122402738538)
                30799.095
                35))
 
 (define neptune
   (make-planet (make-element 30.06992276 0.00026291)
                (make-element 0.00859048 0.00005105)
-               (make-element 1.77004347 0.00035372)
-               (make-element -55.12002969 218.45945325)
-               (make-element 44.96476227 -0.32241464)
-               (make-element 131.78422574 -0.00508664)
+               (make-element 0.0308930864549255 6.17357863015434e-06)
+               (make-element -0.962026001887529 3.81283674131913)
+               (make-element 0.784783148988019 -0.00562719702463221)
+               (make-element 2.30006864135446 -8.87786158636444e-05)
                60190
                36))
 
 (define pluto
   (make-planet (make-element 39.48211675 -0.00031596)
                (make-element 0.24882730 0.00005170)
-               (make-element 17.14001206 0.00004818)
-               (make-element 238.92903833 145.20780515)
-               (make-element 224.06891629 -0.04062942)
-               (make-element 110.30393684 -0.01183482)
+               (make-element 0.299149644278536 8.40899633610868e-07)
+               (make-element 4.17009839748223 2.53435429946188)
+               (make-element 3.91074034063606 -0.000709117152175635)
+               (make-element 1.92516687576987 -0.000206556575380875)
                90613.3055
                37))

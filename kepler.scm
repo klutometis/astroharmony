@@ -54,6 +54,53 @@
             (- y source-y-ecliptic)
             (- z source-z-ecliptic))))
 
+(define (alternate-ecliptics true-anomaly
+                             heliocentric-radius
+                             longitude-ascending-node
+                             longitude-perihelion
+                             inclination
+                             source-x-ecliptic
+                             source-y-ecliptic
+                             source-z-ecliptic)
+  (let ((internal-term (+ true-anomaly
+                          longitude-perihelion
+                          (- longitude-ascending-node))))
+    (let ((cos-longitude-ascending-node (cos longitude-ascending-node))
+          (sin-longitude-ascending-node (sin longitude-ascending-node))
+          (cos-internal-term (cos internal-term))
+          (sin-internal-term (sin internal-term))
+          (cos-inclination (cos inclination))
+          (sin-inclination (sin inclination)))
+      (let ((x (* heliocentric-radius (- (* cos-longitude-ascending-node
+                                            cos-internal-term)
+                                         (* sin-longitude-ascending-node
+                                            sin-internal-term
+                                            cos-inclination))))
+            (y (* heliocentric-radius (+ (* sin-longitude-ascending-node
+                                            cos-internal-term)
+                                         (* cos-longitude-ascending-node
+                                            sin-internal-term
+                                            cos-inclination))))
+
+            (z (* heliocentric-radius
+                  sin-internal-term
+                  sin-inclination)))
+        (values (- x source-x-ecliptic)
+                (- y source-y-ecliptic)
+                (- z source-z-ecliptic))))))
+
+(define (heliocentric-radius semi-major-axis eccentricity true-anomaly)
+  (/ (* semi-major-axis (- 1 (expt eccentricity 2)))
+     (+ 1 (* eccentricity (cos true-anomaly)))))
+
+(define (true-anomaly eccentricity eccentric-anomaly)
+  (modulo
+   (* 2 (atan (* (sqrt (/ (+ 1 eccentricity)
+                          (- 1 eccentricity)))
+                 (tan (* 0.5 eccentric-anomaly)))))
+   (* 2 pi)))
+
+
 (define (equatorials x-ecliptic
                      y-ecliptic
                      z-ecliptic
@@ -159,21 +206,19 @@
         (let* ((eccentric-anomaly
                 (eccentric-anomaly mean-anomaly
                                    eccentricity
-                                   tolerance)))
-          (let*-values (((x-heliocentric y-heliocentric z-heliocentric)
-                         (heliocentrics semi-major-axis
-                                        eccentric-anomaly
-                                        eccentricity))
-                        ((x-ecliptic y-ecliptic z-ecliptic)
-                         (ecliptics argument-perihelion
-                                    longitude-ascending-node
-                                    inclination
-                                    x-heliocentric
-                                    y-heliocentric
-                                    z-heliocentric
-                                    source-x-ecliptic
-                                    source-y-ecliptic
-                                    source-z-ecliptic))
+                                   tolerance))
+               (true-anomaly (true-anomaly eccentricity eccentric-anomaly))
+               (heliocentric-radius
+                (heliocentric-radius semi-major-axis eccentricity true-anomaly)))
+          (let*-values (((x-ecliptic y-ecliptic z-ecliptic)
+                         (alternate-ecliptics true-anomaly
+                                              heliocentric-radius
+                                              longitude-ascending-node
+                                              longitude-perihelion
+                                              inclination
+                                              source-x-ecliptic
+                                              source-y-ecliptic
+                                              source-z-ecliptic))
                         ((x-equatorial y-equatorial z-equatorial)
                          (equatorials x-ecliptic
                                       y-ecliptic

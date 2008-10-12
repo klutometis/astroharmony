@@ -1,3 +1,7 @@
+(define obliquity 23.43928)
+
+(define tolerance 10e-6)
+
 (define (radians->degrees . radians)
   (apply values (map (cut * <> (/ 180.0 pi)) radians)))
 
@@ -50,60 +54,21 @@
             (- y source-y-ecliptic)
             (- z source-z-ecliptic))))
 
-(define (heliocentric-radius semi-major-axis eccentricity true-anomaly)
-  (/ (* semi-major-axis (- 1 (expt eccentricity 2)))
-     (+ 1 (* eccentricity (cos (degrees->radians true-anomaly))))))
-
-(define (alternate-ecliptics true-anomaly
-                             heliocentric-radius
-                             longitude-ascending-node
-                             longitude-perihelion
-                             inclination
-                             source-x-ecliptic
-                             source-y-ecliptic
-                             source-z-ecliptic)
-  (let ((internal-term (+ true-anomaly
-                          longitude-perihelion
-                          (- longitude-ascending-node))))
-    (let ((x (* heliocentric-radius (- (* (cos longitude-ascending-node)
-                                          (cos internal-term))
-                                       (* (sin longitude-ascending-node)
-                                          (sin internal-term)
-                                          (cos inclination)))))
-          (y (* heliocentric-radius (+ (* (sin longitude-ascending-node)
-                                          (cos internal-term))
-                                       (* (cos longitude-ascending-node)
-                                          (sin internal-term)
-                                          (cos inclination)))))
-
-          (z (* heliocentric-radius
-                (sin internal-term)
-                (sin inclination))))
-      (values (- x source-x-ecliptic)
-              (- y source-y-ecliptic)
-              (- z source-z-ecliptic)))))
-
-(define (true-anomaly eccentricity eccentric-anomaly)
-  (modulo
-   (* 2 (atan (* (sqrt (/ (+ 1 eccentricity)
-                          (- 1 eccentricity)))
-                 (tan (* 0.5 eccentric-anomaly)))))
-   (* 2 pi)))
-
 (define (equatorials x-ecliptic
                      y-ecliptic
                      z-ecliptic
                      obliquity)
-  (let ((x-equatorial x-ecliptic)
-        (y-equatorial (+ (* (cos obliquity)
-                            y-ecliptic)
-                         (- (* (sin obliquity)
-                               z-ecliptic))))
-        (z-equatorial (+ (* (sin obliquity)
-                            y-ecliptic)
-                         (* (cos obliquity)
-                            z-ecliptic))))
-    (values x-equatorial y-equatorial z-equatorial)))
+  (let ((obliquity (degrees->radians obliquity)))
+    (let ((x-equatorial x-ecliptic)
+          (y-equatorial (+ (* (cos obliquity)
+                              y-ecliptic)
+                           (- (* (sin obliquity)
+                                 z-ecliptic))))
+          (z-equatorial (+ (* (sin obliquity)
+                              y-ecliptic)
+                           (* (cos obliquity)
+                              z-ecliptic))))
+      (values x-equatorial y-equatorial z-equatorial))))
 
 (define (compute-element element T)
   (+ (element-j2000 element) (* (element-rate element) T)))
@@ -111,7 +76,7 @@
 (define (compute-elements T . elements)
   (apply values (map (cut compute-element <> T) elements)))
 
-(define (eccentric-anomaly mean-anomaly eccentricity)
+(define (eccentric-anomaly mean-anomaly eccentricity tolerance)
   (let iter ((eccentric-anomaly
               (+ mean-anomaly
                  (* eccentricity
@@ -126,55 +91,41 @@
                (- 1 (* eccentricity
                        (cos eccentric-anomaly))))))
       (if (< (abs delta-eccentric-anomaly) tolerance)
-          eccentric-anomaly
+          (radians->degrees eccentric-anomaly)
           (iter (+ eccentric-anomaly delta-eccentric-anomaly))))))
 
-(define (eccentric-anomaly-alt mean-anomaly eccentricity)
-  (let iter ((eccentric-anomaly
-              (+ mean-anomaly
-                 (* eccentricity
-                    (sin mean-anomaly)
-                    (+ 1 (* eccentricity
-                            (cos mean-anomaly)))))))
-    (let ((eccentric-anomaly-prime
-           (- eccentric-anomaly
-              (/ (- eccentric-anomaly
-                    (* eccentricity (sin eccentric-anomaly))
-                    mean-anomaly)
-                 (- 1
-                    (* eccentricity (cos eccentric-anomaly)))))))
-      (if (< (abs (- eccentric-anomaly-prime eccentric-anomaly))
-             tolerance)
-          eccentric-anomaly-prime
-          (iter eccentric-anomaly-prime)))))
-
 (define (heliocentrics semi-major-axis eccentric-anomaly eccentricity)
-  (let ((x (* semi-major-axis (- (cos eccentric-anomaly)
+  (let ((x (* semi-major-axis (- (cos (degrees->radians eccentric-anomaly))
                                  eccentricity)))
         (y (* semi-major-axis
               (sqrt (- 1 (expt eccentricity 2)))
-              (sin eccentric-anomaly)))
+              (sin (degrees->radians eccentric-anomaly))))
         (z 0))
     (values x y z)))
 
 (define (right-ascension x-equatorial
                          y-equatorial
                          z-equatorial)
-  (+ (atan (/ y-equatorial x-equatorial))
-     (cond ((negative? x-equatorial) pi)
+  (+ (radians->degrees (atan (/ y-equatorial x-equatorial)))
+     (cond ((negative? x-equatorial) 180)
            ((and (positive? x-equatorial)
-                 (negative? y-equatorial)) (* 2 pi))
+                 (negative? y-equatorial)) 360)
            (else 0))))
 
 (define (declination x-equatorial
                      y-equatorial
                      z-equatorial)
-  (atan (/ z-equatorial
-           (sqrt (+ (expt x-equatorial 2)
-                    (expt y-equatorial 2))))))
+  (radians->degrees
+   (atan (/ z-equatorial
+            (sqrt (+ (expt x-equatorial 2)
+                     (expt y-equatorial 2)))))))
 
 (define (mean-anomaly mean-longitude longitude-perihelion)
-  (- mean-longitude longitude-perihelion))
+  (let ((mean-anomaly (- mean-longitude longitude-perihelion)))
+    (+ (modulo mean-anomaly (* 2 pi))
+       (if (negative? mean-anomaly)
+           (* 2 pi)
+           0))))
 
 (define (delta . equatorials)
   (sqrt (apply + (map (cut expt <> 2) equatorials))))
@@ -184,10 +135,6 @@
                             delta right-ascension declination)
                 (kepler source 0.0 0.0 0.0 julian-days)))
     (kepler target x-ecliptic y-ecliptic z-ecliptic julian-days)))
-
-;; (define obliquity (degrees->radians 23.43928))
-(define obliquity 0.409092610296857)
-(define tolerance 10e-6)
 
 (define (kepler target
                 source-x-ecliptic
@@ -212,11 +159,9 @@
       (let ((argument-perihelion (- longitude-perihelion longitude-ascending-node))
             (mean-anomaly (mean-anomaly mean-longitude longitude-perihelion)))
         (let* ((eccentric-anomaly
-                (eccentric-anomaly-alt mean-anomaly
-                                       eccentricity))
-               (true-anomaly (true-anomaly eccentricity eccentric-anomaly))
-               (heliocentric-radius
-                (heliocentric-radius semi-major-axis eccentricity true-anomaly)))
+                (eccentric-anomaly mean-anomaly
+                                   eccentricity
+                                   tolerance)))
           (let*-values (((x-heliocentric y-heliocentric z-heliocentric)
                          (heliocentrics semi-major-axis
                                         eccentric-anomaly
@@ -231,15 +176,6 @@
                                     source-x-ecliptic
                                     source-y-ecliptic
                                     source-z-ecliptic))
-;;;                         ((x-ecliptic y-ecliptic z-ecliptic)
-;;;                          (alternate-ecliptics true-anomaly
-;;;                                               heliocentric-radius
-;;;                                               longitude-ascending-node
-;;;                                               longitude-perihelion
-;;;                                               inclination
-;;;                                               source-x-ecliptic
-;;;                                               source-y-ecliptic
-;;;                                               source-z-ecliptic))
                         ((x-equatorial y-equatorial z-equatorial)
                          (equatorials x-ecliptic
                                       y-ecliptic
@@ -256,6 +192,4 @@
                                            y-equatorial
                                            z-equatorial)))
                          (values x-ecliptic y-ecliptic z-ecliptic
-;;;                                  delta
-                                 heliocentric-radius
-                                 right-ascension declination))))))))
+                                 delta right-ascension declination))))))))

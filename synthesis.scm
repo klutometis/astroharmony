@@ -141,21 +141,21 @@
           (- total-duration fade-duration)
           total-duration)))
 
-(define (keplerian-panner-fader sound target source t0 days duration)
-  (let ((delta-t (/ days duration)))
+(define (keplerian-panner-fader sound target source julian-zero days duration)
+  (let ((delta-julian (/ days duration)))
     (lambda (t)
       (let-values (((x-ecliptic y-ecliptic z-ecliptic
                                 delta right-ascension declination)
                     (allocentric-kepler target
                                         source
-                                        (+ t0 (* t delta-t)))))
+                                        (+ julian-zero (* t delta-julian)))))
         (pan (amplifier sound (/ 1 delta))
              silence
              dB-3
              (/ (+ 1 (sin right-ascension)) 2))))))
 
 (define (keplerian-panner-faders source
-                                 t0
+                                 julian-zero
                                  days
                                  hertz
                                  size
@@ -168,7 +168,7 @@
                          (pure-tone hertz (planet-tone target) size volume)
                          target
                          source
-                         t0
+                         julian-zero
                          days
                          duration))
                      targets)))

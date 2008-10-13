@@ -24,3 +24,6 @@
   channels or keplerian data?
 
 * Buffer output?
+
+* NB: super-imposition of intervals is slow! Do sequential things
+  sequentially.

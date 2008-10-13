@@ -1,7 +1,8 @@
 (require-extension
  syntax-case
  endian-port
- foof-loop)
+ foof-loop
+ (srfi 1 26))
 (require 'sound)
 (import sound)
 (let ((out (port->endian-port (open-output-file "test.raw")))
@@ -9,78 +10,34 @@
       (size 8)
       (seconds 30)
       (days (* 3 365))
-      (volume 0.5))
+      (volume 0.5)
+      (planets (list
+                mercury
+                venus
+                earth-moon-barycenter
+                mars
+                jupiter
+                saturn
+                uranus
+                neptune
+                pluto)))
   (let ((duration (* hertz seconds))
-        (t0 (current-julian-day)))
-    (let ((planets
-           (map (lambda (planet)
-                  (keplerian-panner-fader
-                   (pure-tone hertz (planet-tone planet) size volume)
-                   planet
-                   earth-moon-barycenter
-                   t0
-                   days
-                   duration))
-                (list
-                 mercury
-                 venus
-;;;                  earth-moon-barycenter
-                 mars
-                 jupiter
-                 saturn
-                 uranus
-                 neptune
-                 pluto
-                 ))))
-      (let-values (((
-                     mercury
-                     venus
-;;;                      earth-moon-barycenter
-                     mars
-                     jupiter
-                     saturn
-                     uranus
-                     neptune
-                     pluto
-                     )
-                    (apply values planets)))
-        (loop ((for t (up-from 0 (to duration))))
-              (let-values (
-                           ((mercury-l mercury-r) (mercury t))
-                           ((venus-l venus-r) (venus t))
-;;;                            ((earth-moon-barycenter-l
-;;;                              earth-moon-barycenter-r) (venus t))
-                           ((mars-l mars-r) (mars t))
-                           ((jupiter-l jupiter-r) (jupiter t))
-                           ((saturn-l saturn-r) (saturn t))
-                           ((uranus-l uranus-r) (uranus t))
-                           ((neptune-l neptune-r) (neptune t))
-                           ((pluto-l pluto-r) (pluto t))
-                           )
-                (if (zero? (modulo t 1000))
-                    (debug (- duration t)))
-                (endian-port-write-int1 out (+ ((mixer
-                                                 mercury-l
-                                                 venus-l
-;;;                                                  earth-moon-barycenter-l
-                                                 mars-l
-                                                 jupiter-l
-                                                 saturn-l
-                                                 uranus-l
-                                                 neptune-l
-                                                 pluto-l
-                                                 ) t)
-                                               (expt 2 (- size 1))))
-                (endian-port-write-int1 out (+ ((mixer
-                                                 mercury-r
-                                                 venus-r
-;;;                                                  earth-moon-barycenter-r
-                                                 mars-r
-                                                 jupiter-r
-                                                 saturn-r
-                                                 uranus-l
-                                                 neptune-r
-                                                 pluto-r
-                                                 ) t)
-                                               (expt 2 (- size 1)))))))))
+        (center (expt 2 (- size 1))))
+    (let ((panner-fader (keplerian-panner-faders
+                         earth-moon-barycenter
+                         (current-julian-day)
+                         days
+                         hertz
+                         size
+                         seconds
+                         volume
+                         (delete earth-moon-barycenter
+                                 planets))))
+      (loop ((for t (up-from 0 (to duration))))
+            (if (zero? (modulo t 1000))
+                (debug (- duration t)))
+            (let-values (((left right)
+                          (panner-fader t)))
+              (endian-port-write-int1 out (+ (left t) center))
+              (endian-port-write-int1 out (+ (right t) center))))))
   (close-endian-port out))

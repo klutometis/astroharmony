@@ -111,9 +111,8 @@
           (- total-duration fade-duration)
           total-duration)))
 
-(define (keplerian-panner-fader sound target source days duration)
-  (let ((t0 (current-julian-day))
-        (delta-t (/ days duration)))
+(define (keplerian-panner-fader sound target source t0 days duration)
+  (let ((delta-t (/ days duration)))
     (lambda (t)
       (let-values (((x-ecliptic y-ecliptic z-ecliptic
                                 delta right-ascension declination)
@@ -124,3 +123,36 @@
              silence
              dB-3
              (/ (+ 1 (sin right-ascension)) 2))))))
+
+(define (keplerian-panner-faders source
+                                 t0
+                                 days
+                                 hertz
+                                 size
+                                 seconds
+                                 volume
+                                 targets)
+  (let* ((duration (* hertz seconds))
+         (sounds (map (lambda (target)
+                        (keplerian-panner-fader
+                         (pure-tone hertz (planet-tone target) size volume)
+                         target
+                         source
+                         t0
+                         days
+                         duration))
+                     targets)))
+    (lambda (t)
+      (let-values (((left right)
+                    (let iter ((sounds sounds)
+                               (left-channels '())
+                               (right-channels '()))
+                      (if (null? sounds)
+                          (values (apply mixer left-channels)
+                                  (apply mixer right-channels))
+                          (let-values (((left-channel right-channel)
+                                        ((car sounds) t)))
+                            (iter (cdr sounds)
+                                  (cons left-channel left-channels)
+                                  (cons right-channel right-channels)))))))
+        (values left right)))))

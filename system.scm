@@ -10,21 +10,23 @@
       (seconds 30)
       (days (* 3 365))
       (volume 0.5))
-  (let ((duration (* hertz seconds)))
+  (let ((duration (* hertz seconds))
+        (t0 (current-julian-day)))
     (let ((planets
            (map (lambda (planet)
                   (keplerian-panner-fader
                    (pure-tone hertz (planet-tone planet) size volume)
                    planet
-                   jupiter
+                   earth-moon-barycenter
+                   t0
                    days
                    duration))
                 (list
                  mercury
                  venus
-                 earth-moon-barycenter
+;;;                  earth-moon-barycenter
                  mars
-;;;                  jupiter
+                 jupiter
                  saturn
                  uranus
                  neptune
@@ -33,9 +35,9 @@
       (let-values (((
                      mercury
                      venus
-                     earth-moon-barycenter
+;;;                      earth-moon-barycenter
                      mars
-;;;                      jupiter
+                     jupiter
                      saturn
                      uranus
                      neptune
@@ -46,10 +48,10 @@
               (let-values (
                            ((mercury-l mercury-r) (mercury t))
                            ((venus-l venus-r) (venus t))
-                           ((earth-moon-barycenter-l
-                             earth-moon-barycenter-r) (venus t))
+;;;                            ((earth-moon-barycenter-l
+;;;                              earth-moon-barycenter-r) (venus t))
                            ((mars-l mars-r) (mars t))
-;;;                            ((jupiter-l jupiter-r) (jupiter t))
+                           ((jupiter-l jupiter-r) (jupiter t))
                            ((saturn-l saturn-r) (saturn t))
                            ((uranus-l uranus-r) (uranus t))
                            ((neptune-l neptune-r) (neptune t))
@@ -60,9 +62,9 @@
                 (endian-port-write-int1 out (+ ((mixer
                                                  mercury-l
                                                  venus-l
-                                                 earth-moon-barycenter-l
+;;;                                                  earth-moon-barycenter-l
                                                  mars-l
-;;;                                                  jupiter-l
+                                                 jupiter-l
                                                  saturn-l
                                                  uranus-l
                                                  neptune-l
@@ -72,9 +74,9 @@
                 (endian-port-write-int1 out (+ ((mixer
                                                  mercury-r
                                                  venus-r
-                                                 earth-moon-barycenter-r
+;;;                                                  earth-moon-barycenter-r
                                                  mars-r
-;;;                                                  jupiter-r
+                                                 jupiter-r
                                                  saturn-r
                                                  uranus-l
                                                  neptune-r

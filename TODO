@@ -19,3 +19,8 @@
 
   Would like to have a seamless trajectory across planets; temporally
   and spatially.
+
+* More efficient method than continuations, maybe a record-type for
+  channels or keplerian data?
+
+* Buffer output?

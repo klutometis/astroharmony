@@ -46,6 +46,7 @@
   newton
   logarithmic-fader
   keplerian-panner-fader
+  keplerian-panner-faders
   allocentric-kepler
   kepler
   earth-moon-barycenter

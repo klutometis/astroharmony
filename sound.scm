@@ -69,7 +69,12 @@
   dms->radians
   planet-tone
   planet-orbit
-  orbit->hertz)
+  orbit->hertz
+  interval
+  interval/silence
+  stereo-adder
+  stereo-mixer
+  silence)
  (include "util.scm")
  (include "notes.scm")
  (include "synthesis.scm")

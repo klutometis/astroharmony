@@ -88,8 +88,7 @@
 
 (define (equatorials x-ecliptic
                      y-ecliptic
-                     z-ecliptic
-                     obliquity)
+                     z-ecliptic)
   (let ((x-equatorial x-ecliptic)
         (y-equatorial (+ (* (cos obliquity)
                             y-ecliptic)
@@ -198,8 +197,7 @@
                         ((x-equatorial y-equatorial z-equatorial)
                          (equatorials x-ecliptic
                                       y-ecliptic
-                                      z-ecliptic
-                                      obliquity))
+                                      z-ecliptic))
                         ((delta)
                          (delta x-equatorial y-equatorial z-equatorial)))
                        (let ((right-ascension

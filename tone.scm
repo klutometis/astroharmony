@@ -4,7 +4,7 @@
  foof-loop)
 (require 'sound)
 (import sound)
-(let ((out (port->endian-port (open-output-file "test.raw")))
+(let ((out (port->endian-port (open-output-file "test-tone.raw")))
       (hertz 22050)
       (size 8)
       (seconds 2)

@@ -74,7 +74,8 @@
   interval/silence
   stereo-adder
   stereo-mixer
-  silence)
+  silence
+  equatorials)
  (include "util.scm")
  (include "notes.scm")
  (include "synthesis.scm")

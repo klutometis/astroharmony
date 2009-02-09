@@ -45,6 +45,7 @@
   aes
   newton
   logarithmic-fader
+  sampled-keplerian-panner-fader
   keplerian-panner-fader
   keplerian-panner-faders
   allocentric-kepler

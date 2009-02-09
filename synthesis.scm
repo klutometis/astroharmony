@@ -173,3 +173,20 @@
                          duration))
                      targets)))
     (apply stereo-mixer sounds)))
+
+(define (sampled-keplerian-panner-fader sound target)
+  (lambda (t x y z)
+    (let-values (((x-ecliptic y-ecliptic z-ecliptic
+                              delta right-ascension declination)
+                  (kepler target
+                          x
+                          y
+                          z
+                          t)))
+      (if (zero? (modulo (inexact->exact t) 100)) (debug t))
+;;;       (debug (/ 1 delta))
+      (pan (amplifier sound (log (/ 1 delta)))
+           silence
+           dB-3
+           (/ (+ 1 (sin right-ascension)) 2)))))
+

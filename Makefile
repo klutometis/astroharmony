@@ -1,10 +1,10 @@
 SRC := $(wildcard *.scm) Makefile
-RAW := test.raw
+RAW := sampled-system.raw
 WAV := $(RAW:.raw=.wav)
 LIB := sound.scm
 OBJ := $(LIB:.scm=.so)
-SRC := system.scm
-BIN := system
+SRC := sampled-system.scm
+BIN := sampled-system
 
 all: $(RAW) $(WAV)
 
